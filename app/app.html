@@ -1,0 +1,135 @@
+<!--
+ * @fileoverview アプリケーション UI
+ * @author       Ryoji Morita
+ * @version      0.0.1
+-->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="./style.css" type="text/css" />
+  <title>Bridge Terminal</title>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="/app.js"></script>
+</head>
+<body>
+<h1>FEEDBACK ver 1.0</h1>
+
+<!-- 入力フォーム -->
+<section>
+  <table width="100%">
+  <thead>
+  </thead>
+  <tbody>
+    <tr>
+      <td width="50%"><img src="AreaMap.png" width="80%" height="60%" /></td>
+      <td width="50%" style="verrtical-align:top;">
+        ■本日のつぶやき<br/>
+        <textarea cols="35" rows="18" id="val_data_today" wrap="off" disabled></textarea>
+      </td>
+    </tr>
+  </tbody>
+  </table>
+  <br/>
+
+  <h2>入力フォーム</h2>
+
+  <p>■ご利用場所：
+  <input type="checkbox" name="area" value="1" id="val_area1">エリア①
+  <input type="checkbox" name="area" value="2" id="val_area2">エリア②
+  <input type="checkbox" name="area" value="3" id="val_area3">エリア③
+  <input type="checkbox" name="area" value="4" id="val_area4">エリア④
+  <input type="checkbox" name="area" value="5" id="val_area5">エリア⑤
+  <input type="checkbox" name="area" value="6" id="val_area6">エリア⑥
+  <input type="checkbox" name="area" value="7" id="val_area7">エリア⑦
+  </p>
+
+  <p>■
+  <textarea name="cmnt" cols="80" rows="1" id="val_cmnt" placeholder="ここにご要望・ご意見をツイートください。"></textarea>
+  <br/>
+  <input type="submit" class="button" onclick="submitMicStart();" value="マイク ON" />
+  <input type="submit" class="button" onclick="submitMicStop();" value="マイク OFF" />
+  <br/>
+  例<br/>
+  ・○○を補充してほしい。<br/>
+  ・今日は、○○のうちあわせがうるさかった。<br/>
+  ・Edy で手軽にアイスを買えて便利！。
+  </p>
+
+  <p>■グローバル ID : <input type="number" id="val_gid" name="gid" size="20" placeholder="0000******" /> ← GID 入力は必須ではありません。</p>
+
+  <input type="submit" class="button" onclick="sendCmnt();" value="投稿" />
+  <input type="submit" class="button" onclick="clearCmnt();" value="クリア" />
+  <br/>
+  <br/>
+</section>
+
+<!-- 過去のつぶやきをチェック -->
+<section>
+  <script src="http://cdn.jsdelivr.net/webshim/1.12.4/extras/modernizr-custom.js"></script>
+  <!-- polyfiller file to detect and load polyfills -->
+  <script src="http://cdn.jsdelivr.net/webshim/1.12.4/polyfiller.js"></script>
+  <script>
+    webshims.setOptions('waitReady', false);
+    webshims.setOptions('forms-ext', {types: 'date'});
+    webshims.polyfill('forms forms-ext');
+  </script>
+
+  <h2>過去のつぶやきをチェック</h2>
+
+  <article>
+    <ul>
+    <li>2017/03/13(月) 以降を選択してください。</li>
+    </ul>
+
+    <input type="date" name="日付を選択してください" oninput="sendGetCmntOneDay();" id="val_date">
+    <br/>
+    <textarea cols="80%" rows="20" id="val_data_daily" wrap="off" readonly></textarea>
+  </article>
+</section>
+
+
+<!--===========================================================================
+■ COMMAND INPUT
+============================================================================-->
+<!--
+<section>
+  <h1>COMMAND INPUT</h1>
+
+  <p>※ コマンドを入力してください。</p>
+
+  <form action="" method="post" onsubmit="return false;">
+    <input type="text" class="text" style="width:30%; padding:10px" id="data"/>
+    <input type="submit" class="button" style="padding:10px" onclick="sendCmd_Input();" value="送信" />
+    <br/>
+  </form>
+</section>
+-->
+
+
+<!--===========================================================================
+■ LINKS
+============================================================================-->
+<!--
+<section>
+  <h1>Links</h1>
+</section>
+-->
+
+
+<!--===========================================================================
+■ footer :
+============================================================================-->
+<footer>
+  <address></address>
+</footer>
+<section>
+  <!-- 画面更新ボタン -->
+  <input type="submit" class="button" onclick="sendSetCmd( 'sudo ./board.out usbkey 0x3E' );" value="画面更新" />
+  <!-- 画面最大表示ボタン -->
+  <input type="submit" class="button" onclick="sendSetCmd( 'sudo ./board.out usbkey 0x44' );" value="全画面表示" />
+</section>
+
+</body>
+</html>
