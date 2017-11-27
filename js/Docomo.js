@@ -95,7 +95,8 @@ Docomo.prototype.Talk = function( cmnt, callback ){
     json: true
   };
 
-/* proxy 環境の場合はこちらを使うこと
+/*
+// proxy 環境の場合はこちらを使うこと
   var docomoOptions = {
     uri: this.base_url + this.api_key,
     proxy: 'http://proxy.sngw.sony.co.jp:10080',    // ★ proxy: 追加！
