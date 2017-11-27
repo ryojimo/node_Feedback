@@ -4,7 +4,7 @@
  * @version      0.0.1
 */
 var sv_ip   = "192.168.91.118";               // node.js server の IP アドレス
-var sv_port = 3000;                           // node.js server の port 番号
+var sv_port = 5000;                           // node.js server の port 番号
 
 var server = io.connect( "http://" + sv_ip + ":" + sv_port ); //ローカル
 
