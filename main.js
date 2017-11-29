@@ -120,9 +120,9 @@ startSystem();
 function startSystem() {
   console.log( "[main.js] startSystem()" );
 
-  timerDist = setInterval( checkDist, 2000 );
+//  timerDist = setInterval( checkDist, 2000 );
   timerFlg  = setInterval( function(){
-                io.sockets.emit( 'S_to_C_TALK_REPLY', {value:false} );
+                io.sockets.emit( 'S_to_C_TALK_ENABLED', {value:false} );
               }, 90000 );
 };
 
@@ -238,9 +238,9 @@ function checkDist() {
 
         io.sockets.emit( 'S_to_C_START_TALK', {value:false} );
 
-//        setTimeout( function() {
-//                io.sockets.emit( 'S_to_C_START_MIC', {value:false} );
-//              }, 10000 );
+        setTimeout( function() {
+                io.sockets.emit( 'S_to_C_START_MIC', {value:false} );
+              }, 10000 );
         setTimeout( startSystem, 30000 );
       }
     });

@@ -3,7 +3,9 @@
  * @author       Ryoji Morita
  * @version      0.0.1
 */
-var sv_ip   = "192.168.91.118";               // node.js server の IP アドレス
+//var sv_ip   = "feedback.rp.lfx.sony.co.jp"; // node.js server の IP アドレス
+//var sv_ip   = "43.31.78.45";                // node.js server の IP アドレス
+var sv_ip   = "192.168.91.123";               // node.js server の IP アドレス
 var sv_port = 5000;                           // node.js server の port 番号
 
 var server = io.connect( "http://" + sv_ip + ":" + sv_port ); //ローカル
@@ -40,10 +42,10 @@ server.on( 'S_to_C_DATA', function( data ){
 });
 
 
-server.on( 'S_to_C_TALK_REPLY', function( data ){
-  console.log( "[app.js] " + 'S_to_C_TALK_REPLY' );
+server.on( 'S_to_C_TALK_ENABLED', function( data ){
+  console.log( "[app.js] " + 'S_to_C_TALK_ENABLED' );
   console.log( "[app.js] data = " + data.value );
-  flg_talk = false;
+  flg_talk = true;
 //  window.alert( "コマンドを送信しました。\n\r" + data.value );
 });
 
@@ -131,14 +133,15 @@ function showUpdatedCmnt( data, id, dir ){
 
 //-----------------------------------------------------------------------------
 // ドキュメント・オブジェクトから受け取るイベント
-var flg_talk = false;
+var flg_talk = true;
 document.onmousemove = function(){
-//  console.log( "[app.js] document.onmousemove" );
-//  if( flg_talk == false ){
-//    sendTalkData();
-//    flg_talk = true;
-//    setTimeout( submitMicStart, 1500 );
-//  }
+  console.log( "[app.js] document.onmousemove" );
+
+  // flg_talk が true の時だけ、しゃべることが可能。
+  if( flg_talk == true ){
+    sendTalkData();
+    flg_talk = false;
+  }
 };
 
 

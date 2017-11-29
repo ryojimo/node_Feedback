@@ -81,12 +81,15 @@ Docomo.prototype.GetVoice = function(){
 Docomo.prototype.Talk = function( cmnt, callback ){
   console.log( "[Docomo.js] Talk()" );
   console.log( "[Docomo.js] cmnt     = " + cmnt );
-  console.log( "[Docomo.js] callback = " + callback );
+//  console.log( "[Docomo.js] callback = " + callback );
 
   var apiBODY = makeDocomoXML( this.voice, cmnt );
 
   var docomoOptions = {
     uri: this.base_url + this.api_key,
+
+//    proxy: 'http://proxy.sngw.sony.co.jp:10080',    // proxy 環境の時のみ記述
+
     headers: {
       'Content-Type': 'application/ssml+xml',
       'Accept': 'audio/L16'
@@ -95,26 +98,13 @@ Docomo.prototype.Talk = function( cmnt, callback ){
     json: true
   };
 
-/*
-// proxy 環境の場合はこちらを使うこと
-  var docomoOptions = {
-    uri: this.base_url + this.api_key,
-    proxy: 'http://proxy.sngw.sony.co.jp:10080',    // ★ proxy: 追加！
-    headers: {
-      'Content-Type': 'application/ssml+xml',
-      'Accept': 'audio/L16'
-    },
-    body: apiBODY,                                  // ★ form ではなく body を使うこと！
-    json: true
-  };
-*/
-
   //リクエスト送信
   var file_lpcm = this.voice_filename + ".lpcm";
   var file_wav  = this.voice_filename + ".wav";
   var cmd_pcm2wav  = "sox  -t  raw  -r  16k  -e  signed  -b  16  -B  -c  1  ./data/" + file_lpcm + "  ./data/" + file_wav;
   var cmd_playwav  = "play  ./data/" + file_wav;
 
+  console.log( "[Docomo.js] docomoOptions = " + JSON.stringify(docomoOptions) );
   var res = request.post( docomoOptions );
 
   res.on( 'response', function( response ){
