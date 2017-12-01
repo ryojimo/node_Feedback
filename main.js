@@ -153,7 +153,7 @@ io.sockets.on( 'connection', function( socket ){
   socket.on( 'C_to_S_GET_CMNT_ONE_DAY', function( data ){
     console.log( "[main.js] " + 'C_to_S_GET_CMNT_ONE_DAY' );
 
-    var file = 'data/' + data + '_cmnt.txt';
+    var file = '/media/pi/USBDATA/' + data + '_cmnt.txt';
     console.log( "[main.js] file: " + file );
     var ret = cmnt.ReadFile( file );
 
@@ -182,7 +182,7 @@ io.sockets.on( 'connection', function( socket ){
     console.log( "[main.js] data = " + data );
 
     var data = { time: hhmmss(), area: data.area, gid: data.gid, cmnt: data.cmnt };
-    var file = 'data/' + yyyymmdd() + '_cmnt.txt';
+    var file = '/media/pi/USBDATA/' + yyyymmdd() + '_cmnt.txt';
     console.log( "[main.js] data.time = " + data.time );
     console.log( "[main.js] data.area = " + data.area );
     console.log( "[main.js] data.gid  = " + data.gid );

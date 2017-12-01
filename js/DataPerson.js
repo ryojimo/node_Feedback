@@ -48,7 +48,7 @@ DataPerson.prototype.Update = function( data ){
  * @param {string} file - 対象のファイル ( フルパス )
  * @return {void}
  * @example
- * UpdateFile( "./data/person.txt" );
+ * UpdateFile( "/media/pi/USBDATA/person.txt" );
 */
 DataPerson.prototype.UpdateFile = function( file ){
   console.log( "[DataPerson.js] UpdateFile()" );
@@ -97,7 +97,7 @@ DataPerson.prototype.UpdateFile = function( file ){
  * @param {number} gid - Global ID
  * @return {object} data - 読み出したデータ
  * @example
- * GetData( "./data/person.txt", "0000******" );
+ * GetData( "/media/pi/USBDATA/person.txt", "0000******" );
 */
 DataPerson.prototype.GetData = function( file, gid ){
   console.log( "[DataPerson.js] GetData()" );
@@ -139,7 +139,7 @@ DataPerson.prototype.GetData = function( file, gid ){
  * @param {string} file - 対象のファイル ( フルパス )
  * @return {object} ret - 読み出したデータ
  * @example
- * var obj = ReadFile( "./data/data.txt" );
+ * var obj = ReadFile( "/media/pi/USBDATA/data.txt" );
 */
 DataPerson.prototype.ReadFile = function( file ){
   console.log( "[DataPerson.js] ReadFile()" );

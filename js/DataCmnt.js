@@ -48,7 +48,7 @@ DataCmnt.prototype.Update = function( data ){
  * @param {string} file - 対象のファイル ( フルパス )
  * @return {void}
  * @example
- * AppendFile( "./data/data.txt" );
+ * AppendFile( "/media/pi/USBDATA/data.txt" );
 */
 DataCmnt.prototype.AppendFile = function( file ){
   console.log( "[DataCmnt.js] AppendFile()" );
@@ -72,7 +72,7 @@ DataCmnt.prototype.AppendFile = function( file ){
  * @param {string} file - 対象のファイル ( フルパス )
  * @return {object} ret - 読み出したデータ
  * @example
- * var obj = ReadFile( "./data/data.txt" );
+ * var obj = ReadFile( "/media/pi/USBDATA/data.txt" );
 */
 DataCmnt.prototype.ReadFile = function( file ){
   console.log( "[DataCmnt.js] ReadFile()" );

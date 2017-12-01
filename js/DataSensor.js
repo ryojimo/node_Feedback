@@ -72,7 +72,7 @@ DataSensor.prototype.UpdateDataOneDay = function( file ){
   console.log( "[DataSensor.js] UpdateDataOneDay()" );
   console.log( "[DataSensor.js] file = " + file );
 
-  var date = file.replace( 'data/', '' );
+  var date = file.replace( '/media/pi/USBDATA/', '' );
   date = date.replace( '_sensor.txt', '' );
 
   this.date = date;
@@ -98,6 +98,32 @@ DataSensor.prototype.UpdateDataOneDay = function( file ){
   }
   return ret;
 };
+
+
+/**
+ * dataLast30s プロパティで "10秒前" と "今" の値に大きな差があるか？チェックする。
+ * @param {void}
+ * @return {bool} ret - 500 以上の差があれば true を返す
+ * @example
+ * IsLargeDiff();
+*/
+DataSensor.prototype.IsLargeDiff = function(){
+  console.log( "[DataSensor.js] IsLargeDiff()" );
+
+  console.log( "[DataSensor.js] 10秒前 = " + this.dataLast30s["10秒前"] );
+  console.log( "[DataSensor.js] 今     = " + this.dataLast30s["今"] );
+
+  var diff = this.dataLast30s["10秒前"] - this.dataLast30s["今"];
+  var ret = false;
+
+  if( this.dataLast30s["10秒前"] != 0 && ( diff < -500 || 500 < diff ) ){
+    ret = true;
+  } else {
+    ret = false;
+  }
+
+  return ret;
+}
 
 
 module.exports = DataSensor;

@@ -27,8 +27,8 @@ var Docomo = function(){
   this.api_key = "2f332f71636e67432e556f676a7852582f77362e7264526f3139724b6556786634702e335464414f396d36";
   this.voice = "nozomi";
   this.voice_filename = "voice_file";
-  this.cmd_pcm2wav = "sox  -t  raw  -r  16k  -e  signed  -b  16  -B  -c  1  ./data/" + this.voice_filename + ".lpcm  ./data/" + this.voice_filename + ".wav";
-  this.cmd_play_wav = "play  ./data/" + this.voice_filename + ".wav";
+  this.cmd_pcm2wav = "sox  -t  raw  -r  16k  -e  signed  -b  16  -B  -c  1  /media/pi/USBDATA/" + this.voice_filename + ".lpcm  /media/pi/USBDATA/" + this.voice_filename + ".wav";
+  this.cmd_play_wav = "play  /media/pi/USBDATA/" + this.voice_filename + ".wav";
   this.cmnt = "";
 };
 
@@ -101,8 +101,8 @@ Docomo.prototype.Talk = function( cmnt, callback ){
   //リクエスト送信
   var file_lpcm = this.voice_filename + ".lpcm";
   var file_wav  = this.voice_filename + ".wav";
-  var cmd_pcm2wav  = "sox  -t  raw  -r  16k  -e  signed  -b  16  -B  -c  1  ./data/" + file_lpcm + "  ./data/" + file_wav;
-  var cmd_playwav  = "play  ./data/" + file_wav;
+  var cmd_pcm2wav  = "sox  -t  raw  -r  16k  -e  signed  -b  16  -B  -c  1  /media/pi/USBDATA/" + file_lpcm + "  /media/pi/USBDATA/" + file_wav;
+  var cmd_playwav  = "play  /media/pi/USBDATA/" + file_wav;
 
   console.log( "[Docomo.js] docomoOptions = " + JSON.stringify(docomoOptions) );
   var res = request.post( docomoOptions );
@@ -138,7 +138,7 @@ Docomo.prototype.Talk = function( cmnt, callback ){
           callback();
         }
       });
-  }).pipe( fs.createWriteStream( 'data/' + file_lpcm ) );
+  }).pipe( fs.createWriteStream( '/media/pi/USBDATA/' + file_lpcm ) );
 }
 
 
