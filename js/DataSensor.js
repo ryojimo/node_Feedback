@@ -50,8 +50,8 @@ var DataSensor = function(name){
  * UpdateDataLast30s( data );
 */
 DataSensor.prototype.UpdateDataLast30s = function( data ){
-  console.log( "[DataSensor.js] UpdateDataLast30s()" );
-  console.log( "[DataSensor.js] data = " + data );
+//  console.log( "[DataSensor.js] UpdateDataLast30s()" );
+//  console.log( "[DataSensor.js] data = " + data );
 
   this.dataLast30s["30秒前"] = this.dataLast30s["20秒前"];
   this.dataLast30s["20秒前"] = this.dataLast30s["10秒前"];
@@ -108,16 +108,17 @@ DataSensor.prototype.UpdateDataOneDay = function( file ){
  * IsLargeDiff();
 */
 DataSensor.prototype.IsLargeDiff = function(){
-  console.log( "[DataSensor.js] IsLargeDiff()" );
+//  console.log( "[DataSensor.js] IsLargeDiff()" );
 
-  console.log( "[DataSensor.js] 10秒前 = " + this.dataLast30s["10秒前"] );
-  console.log( "[DataSensor.js] 今     = " + this.dataLast30s["今"] );
+//  console.log( "[DataSensor.js] 10秒前 = " + this.dataLast30s["10秒前"] );
+//  console.log( "[DataSensor.js] 今     = " + this.dataLast30s["今"] );
 
   var diff = this.dataLast30s["10秒前"] - this.dataLast30s["今"];
   var ret = false;
 
   if( this.dataLast30s["10秒前"] != 0 && ( diff < -500 || 500 < diff ) ){
     ret = true;
+    console.log( "10秒前の値と今の値が 500 以上差があります。" );
   } else {
     ret = false;
   }
