@@ -8,6 +8,7 @@
 
 // 必要なライブラリをロード
 var fs = require( 'fs' );
+var MongoClient  = require( 'mongodb' ).MongoClient;
 
 
 /**
@@ -19,11 +20,68 @@ var fs = require( 'fs' );
 */
 var DataPerson = function(){
   /**
+   * MongoDB のデータベース名
+   * @type {string}
+  */
+  this.nameDatabase = '24f_bt';
+
+  /**
+   * MongoDB の URL
+   * @type {string}
+  */
+  this.mongo_url = 'mongodb://localhost:27017/';
+
+  /**
    * データ
    * @type {Object}
   */
   this.data = { gid:'', name:'', cnt:0, lastVisitDay:'' };
 };
+
+
+/**
+ * コレクションに含まれる全ドキュメントを取得する
+ * @param {string} gid   - MongoDB のコレクション。
+ * @param {string} name  - 対象の名前。
+ * @param {obj} callback - データを取得するためのコールバック関数
+ * @return {void}
+ * @example
+ * GetMDDocData( '0000114347' );
+*/
+DataPerson.prototype.GetMDDocData = function( gid, name, callback ){
+  console.log( "[DataPerson.js] GetMDDocData()" );
+  console.log( "[DataPerson.js] gid  = " + gid );
+  console.log( "[DataPerson.js] name = " + name );
+
+  var data = { id: gid, name: name, cnt: 0, lastVisitDay: '' };
+
+  MongoClient.connect( this.mongo_url, function(err, db) {
+    if( err ){
+      throw err;
+    }
+
+    // データベースを取得する
+    var dbo = db.db( '24f_bt' );
+
+    // コレクションを取得する
+    var clo = dbo.collection( 'persons' );
+
+    // コレクションに含まれる全ドキュメントを取得する
+    clo.find({}).toArray( function(err, documents){
+      try{
+        if (err) throw err;
+        db.close();
+
+//      console.log( data );
+        callback( true, documents );
+      }
+      catch( e ){
+        console.log( "[DataPerson.js] e = " + e );
+        callback( false, data );
+      }
+    });
+  });
+}
 
 
 /**
