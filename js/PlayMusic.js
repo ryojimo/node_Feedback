@@ -31,20 +31,19 @@ var PlayMusic = function(){
 /**
  * 引数の filename を再生する
  * @param {string} filename - 再生するファイル
- * @param {function} callback - play  ../../MyContents/****.mp3 した後に呼び出すコールバック関数
  * @return {void}
  * @example
  * Play( "Pink\ -\ Blow\ Me.mp3" );
 */
-PlayMusic.prototype.Play = function( filename, callback ){
+PlayMusic.prototype.Play = function( filename ){
   console.log( "[PlayMusic.js] PLAY()" );
   console.log( "[PlayMusic.js] filename = " + filename );
 
   if( this.status == 'STOP' ){
     this.status = 'PLAY';
     this.filename = filename;
-    var cmd = "play";
-    var args = ["-v", "0.4", '../MyContents/' + this.filename];
+    var cmd = 'play';
+    var args = ['-v', '0.4', '../MyContents/' + this.filename];
 
     var spawn = require( 'child_process' ).spawn;
     this.child = spawn( cmd, args );
@@ -72,7 +71,7 @@ PlayMusic.prototype.Play = function( filename, callback ){
 
 /**
  * 状態を STOP/PAUSE/RESTART に変更してシグナルを this.child へ送る
- * @param {string} status - "STOP" or "PAUSE" or "RESTART"
+ * @param {string} status - 'STOP' or 'PAUSE' or 'RESTART'
  * @return {void}
  * @example
  * Stop();
@@ -97,7 +96,7 @@ PlayMusic.prototype.ChangeStatus = function( status ){
 
 /**
  * play プロセスのプロセス ID を取得する
- * @param {function} callback -  した後に呼び出すコールバック関数
+ * @param {function(string)} callback - GID を渡すための callback 関数
  * @return {void}
  * @example
  * Stop();
@@ -105,10 +104,10 @@ PlayMusic.prototype.ChangeStatus = function( status ){
 PlayMusic.prototype.GetPID = function( callback ){
   console.log( "[PlayMusic.js] GetPID()" );
 
-  var cmd_playwav  = "ps  aux  |  grep  play\\ -v";
+  var cmd  = 'ps  aux  |  grep  play\\ -v';
 
   var exec = require( 'child_process' ).exec;
-  var ret  = exec( cmd_playwav,
+  var ret  = exec( cmd,
     function( err, stdout, stderr ){
 //      console.log( "[PlayMusic.js] stdout = " + stdout );
 //      console.log( "[PlayMusic.js] stderr = " + stderr );
@@ -128,3 +127,5 @@ PlayMusic.prototype.GetPID = function( callback ){
 
 
 module.exports = PlayMusic;
+
+

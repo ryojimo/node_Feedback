@@ -23,13 +23,13 @@ var Docomo = function(){
    * データ
    * @type {string}
   */
-  this.base_url = "https://api.apigw.smt.docomo.ne.jp/aiTalk/v1/textToSpeech?APIKEY=";
-  this.api_key = "2f332f71636e67432e556f676a7852582f77362e7264526f3139724b6556786634702e335464414f396d36";
-  this.voice = "nozomi";
-  this.voice_filename = "voice_file";
-  this.cmd_pcm2wav = "sox  -t  raw  -r  16k  -e  signed  -b  16  -B  -c  1  /media/pi/USBDATA/" + this.voice_filename + ".lpcm  /media/pi/USBDATA/" + this.voice_filename + ".wav";
-  this.cmd_play_wav = "play  /media/pi/USBDATA/" + this.voice_filename + ".wav";
-  this.cmnt = "";
+  this.base_url = 'https://api.apigw.smt.docomo.ne.jp/aiTalk/v1/textToSpeech?APIKEY=';
+  this.api_key = '2f332f71636e67432e556f676a7852582f77362e7264526f3139724b6556786634702e335464414f396d36';
+  this.voice = 'nozomi';
+  this.voice_filename = 'voice_file';
+  this.cmd_pcm2wav = 'sox  -t  raw  -r  16k  -e  signed  -b  16  -B  -c  1  /media/pi/USBDATA/' + this.voice_filename + '.lpcm  /media/pi/USBDATA/' + this.voice_filename + '.wav';
+  this.cmd_play_wav = 'play  /media/pi/USBDATA/' + this.voice_filename + '.wav';
+  this.cmnt = '';
 };
 
 
@@ -57,9 +57,9 @@ Docomo.prototype.Update = function( speaker, filename ){
  * @example
  * GetVoice();
 */
-var voice =  ["nozomi", "maki", "reina", "taichi",
-              "sumire", "kaho", "akari", "nanako",
-              "seiji", "osamu", "hiroshi", "anzu", "tihiro", "koutaro", "yuto"
+var voice =  ['nozomi', 'maki', 'reina', 'taichi',
+              'sumire', 'kaho', 'akari', 'nanako',
+              'seiji', 'osamu', 'hiroshi', 'anzu', 'tihiro', 'koutaro', 'yuto'
              ];
 
 Docomo.prototype.GetVoice = function(){
@@ -88,7 +88,7 @@ Docomo.prototype.Talk = function( cmnt, callback ){
   var docomoOptions = {
     uri: this.base_url + this.api_key,
 
-//    proxy: 'http://proxy.sngw.sony.co.jp:10080',    // proxy 環境の時のみ記述
+    proxy: 'http://proxy.sngw.sony.co.jp:10080',    // proxy 環境の時のみ記述
 
     headers: {
       'Content-Type': 'application/ssml+xml',
@@ -99,10 +99,10 @@ Docomo.prototype.Talk = function( cmnt, callback ){
   };
 
   //リクエスト送信
-  var file_lpcm = this.voice_filename + ".lpcm";
-  var file_wav  = this.voice_filename + ".wav";
-  var cmd_pcm2wav  = "sox  -t  raw  -r  16k  -e  signed  -b  16  -B  -c  1  /media/pi/USBDATA/" + file_lpcm + "  /media/pi/USBDATA/" + file_wav;
-  var cmd_playwav  = "play  /media/pi/USBDATA/" + file_wav;
+  var file_lpcm = this.voice_filename + '.lpcm';
+  var file_wav  = this.voice_filename + '.wav';
+  var cmd_pcm2wav  = 'sox  -t  raw  -r  16k  -e  signed  -b  16  -B  -c  1  /media/pi/USBDATA/' + file_lpcm + '  /media/pi/USBDATA/' + file_wav;
+  var cmd_playwav  = 'play  /media/pi/USBDATA/' + file_wav;
 
   console.log( "[Docomo.js] docomoOptions = " + JSON.stringify(docomoOptions) );
   var res = request.post( docomoOptions );
@@ -165,3 +165,5 @@ function makeDocomoXML( speaker, cmnt ){
 
 
 module.exports = Docomo;
+
+

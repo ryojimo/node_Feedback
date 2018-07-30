@@ -3,10 +3,10 @@
  * @author       Ryoji Morita
  * @version      0.0.1
 */
-//var sv_ip   = "feedback.rp.lfx.sony.co.jp"; // node.js server の IP アドレス
-//var sv_ip   = "43.31.78.45";                // node.js server の IP アドレス
-var sv_ip   = "192.168.91.123";               // node.js server の IP アドレス
-var sv_port = 5000;                           // node.js server の port 番号
+var sv_ip   = "feedback.rp.lfx.sony.co.jp"; // node.js server の IP アドレス
+//var sv_ip = "43.31.78.45";                // node.js server の IP アドレス
+//var sv_ip = "192.168.91.134";             // node.js server の IP アドレス
+var sv_port = 5000;                         // node.js server の port 番号
 
 var server = io.connect( "http://" + sv_ip + ":" + sv_port ); //ローカル
 
@@ -65,14 +65,14 @@ server.on( 'S_to_C_START_MIC', function( data ){
 
 server.on( 'S_to_C_CMNT_TODAY', function( data ){
   console.log( "[app.js] " + 'S_to_C_CMNT_TODAY' );
-  console.log( "[app.js] data = " + data.value );
+  console.log( "[app.js] data = " + JSON.stringify(data.value) );
   showUpdatedCmnt( data.value, "val_data_today", "down" );
 });
 
 
 server.on( 'S_to_C_CMNT_ONE_DAY', function( data ){
   console.log( "[app.js] " + 'S_to_C_CMNT_ONE_DAY' );
-  console.log( "[app.js] data = " + data.value );
+  console.log( "[app.js] data = " + JSON.stringify(data.value) );
 
   if( data.value == false ){
     str = "コメントがありません。";
@@ -102,25 +102,22 @@ server.on( 'S_to_C_TALK_CB', function(){
 */
 function showUpdatedCmnt( data, id, dir ){
   console.log( "[app.js] showUpdatedCmnt()" );
-  console.log( "[app.js] data = " + data );
+  console.log( "[app.js] data = " + JSON.stringify(data) );
   console.log( "[app.js] id   = " + id );
   console.log( "[app.js] dir  = " + dir );
 
-  // JSON 配列の形式に整形
-  data = data.substr( 0, data.length - 2 );
-  var data = "[ " + data + " ]";
-
-  var obj = (new Function("return " + data))();
+  console.log( "[app.js] data.length = " + data.length );
 
   // 表示する文字列を生成
   var str = "";
+
   if( dir === "up" ){
-    for( i=0; i<obj.length; i++ ){
-      str += obj[i].time + " : " + obj[i].cmnt + "\n";
+    for( i=0; i<data.length; i++ ){
+      str += data[i].time + " : " + data[i].cmnt + "\n";
     }
   } else if( dir === "down" ){
-    for( i=obj.length - 1; i>=0; i-- ){
-      str += obj[i].time + " : " + obj[i].cmnt + "\n";
+    for( i=data.length - 1; i>=0; i-- ){
+      str += data[i].time + " : " + data[i].cmnt + "\n";
     }
   } else{
     str = "";

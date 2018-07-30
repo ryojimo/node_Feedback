@@ -11,11 +11,8 @@ var fs       = require( 'fs' );
 var colors   = require( 'colors' );
 require( 'date-utils' );
 
-const DataCmnt   = require( './js/DataCmnt' );
-const DataPerson = require( './js/DataPerson' );
-const DataSensor = require( './js/DataSensor' );
-const Docomo     = require( './js/Docomo' );
-const PlayMusic  = require( './js/PlayMusic' );
+const DataCmnts   = require( './js/DataCmnts' );
+const Docomo      = require( './js/Docomo' );
 
 
 // Ver. 表示
@@ -103,7 +100,7 @@ var io = socketio.listen( server );
 var timerDist;
 var timerFlg;
 
-var cmnt    = new DataCmnt();
+var cmnts   = new DataCmnts();
 var docomo  = new Docomo();
 
 
@@ -150,14 +147,13 @@ io.sockets.on( 'connection', function( socket ){
   });
 
 
-  socket.on( 'C_to_S_GET_CMNT_ONE_DAY', function( data ){
+  socket.on( 'C_to_S_GET_CMNT_ONE_DAY', function( date ){
     console.log( "[main.js] " + 'C_to_S_GET_CMNT_ONE_DAY' );
 
-    var file = '/media/pi/USBDATA/' + data + '_cmnt.txt';
-    console.log( "[main.js] file: " + file );
-    var ret = cmnt.ReadFile( file );
-
-    io.sockets.emit( 'S_to_C_CMNT_ONE_DAY', {value:ret} );
+    cmnts.GetMDDocDataOneDay( date, function( err, data ){
+//      console.log( data );
+      io.sockets.emit( 'S_to_C_CMNT_ONE_DAY', {ret:err, value:data} );
+    });
   });
 
 
@@ -181,19 +177,21 @@ io.sockets.on( 'connection', function( socket ){
     console.log( "[main.js] " + 'C_to_S_CMNT' );
     console.log( "[main.js] data = " + data );
 
-    var data = { time: hhmmss(), area: data.area, gid: data.gid, cmnt: data.cmnt };
-    var file = '/media/pi/USBDATA/' + yyyymmdd() + '_cmnt.txt';
+    var data = { date:yyyymmdd(), time: hhmmss(), area: data.area, gid: data.gid, cmnt: data.cmnt };
+
+    console.log( "[main.js] data.date = " + data.date );
     console.log( "[main.js] data.time = " + data.time );
     console.log( "[main.js] data.area = " + data.area );
     console.log( "[main.js] data.gid  = " + data.gid );
     console.log( "[main.js] data.cmnt = " + data.cmnt );
-    console.log( "[main.js] file = " + file );
 
-    cmnt.Update( data );
-    cmnt.AppendFile( file );
-    var ret = cmnt.ReadFile( file );
+    cmnts.CreateMDDoc( data );
 
-    io.sockets.emit( 'S_to_C_CMNT_TODAY', {value:ret} );
+    cmnts.GetMDDocDataOneDay( yyyymmdd(), function( err, data ){
+//      console.log( data );
+      io.sockets.emit( 'S_to_C_CMNT_TODAY', {value:data} );
+    });
+
   });
 
 
