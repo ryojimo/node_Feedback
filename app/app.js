@@ -4,7 +4,7 @@
  * @version      0.0.1
 */
 var sv_ip   = "feedback.rp.lfx.sony.co.jp"; // node.js server の IP アドレス
-//var sv_ip = "43.31.78.45";                // node.js server の IP アドレス
+//var sv_ip = "43.2.100.158";               // node.js server の IP アドレス
 //var sv_ip = "192.168.91.134";             // node.js server の IP アドレス
 var sv_port = 5000;                         // node.js server の port 番号
 
@@ -156,8 +156,8 @@ function sendGetCmntOneDay(){
   var date = document.getElementById( "val_date" ).value;
   console.log( "[app.js] date =" + date );
 
-  if( date < "2017-11-24" ){
-    alert( "2017/11/24 以降を指定してください。" );
+  if( date < "2018-08-01" ){
+    alert( "2018/08/01 以降を指定してください。" );
   }
 
   console.log( "[app.js] server.emit(" + 'C_to_S_GET_CMNT_ONE_DAY' + ")" );
@@ -257,7 +257,7 @@ function clearCmnt(){
 function sendTalkData(){
   console.log( "[app.js] sendTalkData()" );
 
-  var hi1 = "ご意見をお話ください。"
+  var hi1 = "ご意見の記入をお願いします。"
   var hi2 = "どうぞ。";
 
   console.log( "[app.js] server.emit(" + 'C_to_S_TALK' + ")" );
