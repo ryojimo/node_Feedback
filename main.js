@@ -132,7 +132,7 @@ io.sockets.on( 'connection', function( socket ){
   // 切断したときに送信
   socket.on( 'disconnect', function(){
     console.log( "[main.js] " + 'disconnect' );
-//  io.sockets.emit("S_to_C_DATA", {value:"user disconnected"});
+//  io.sockets.emit('S_to_C_DATA', {value:'user disconnected'});
   });
 
 
@@ -191,7 +191,6 @@ io.sockets.on( 'connection', function( socket ){
 //      console.log( data );
       io.sockets.emit( 'S_to_C_CMNT_TODAY', {value:data} );
     });
-
   });
 
 
@@ -199,7 +198,7 @@ io.sockets.on( 'connection', function( socket ){
     console.log( "[main.js] " + 'C_to_S_TALK' );
     console.log( "[main.js] cmnt = " + cmnt );
 
-    docomo.Update( "nozomi", "hello" );
+    docomo.Update( 'nozomi', 'hello' );
     docomo.Talk( cmnt, function(){
       io.sockets.emit( 'S_to_C_TALK_CB', {value:true} )
     });
@@ -253,18 +252,18 @@ function checkDist() {
  * toDoubleDigits( 8 );
 */
 var toDoubleDigits = function( num ){
-  console.log( "[main.js] toDoubleDigits()" );
-  console.log( "[main.js] num = " + num );
-  num += "";
+//  console.log( "[main.js] toDoubleDigits()" );
+//  console.log( "[main.js] num = " + num );
+  num += '';
   if( num.length === 1 ){
-    num = "0" + num;
+    num = '0' + num;
   }
   return num;
 };
 
 
 /**
- * 現在の日付を YYYY_MM_DD 形式で取得する
+ * 現在の日付を YYYY-MM-DD 形式で取得する
  * @param {void}
  * @return {string} day - 日付
  * @example
@@ -299,7 +298,9 @@ var hhmmss = function(){
   var min  = toDoubleDigits( date.getMinutes() );
   var sec  = toDoubleDigits( date.getSeconds() );
 
-  var time = hour + ":" + min + ":" + sec;
+  var time = hour + ':' + min + ':' + sec;
   console.log( "[main.js] time = " + time );
   return time;
 };
+
+
