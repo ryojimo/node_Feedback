@@ -93,7 +93,7 @@ DataCmnts.prototype.GetMDDocDataOneDay = function( date, callback ){
 
     var query = { date: date };
 
-    // コレクションに含まれるすべてのドキュメントを取得する
+    // {date: date} のドキュメントを取得する
     clo.find( query ).toArray( function(err, documents){
       try{
         if( err ){
