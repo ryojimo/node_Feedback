@@ -128,9 +128,9 @@
 </footer>
 <section>
   <!-- 画面更新ボタン -->
-  <input type="submit" class="button" onclick="sendSetCmd( 'sudo ./board.out usbkey 0x3E' );" value="画面更新" />
+  <input type="submit" class="button" onclick="sendSetCmd( 'sudo ./board.out --usbkey 0x3E' );" value="画面更新" />
   <!-- 画面最大表示ボタン -->
-  <input type="submit" class="button" onclick="sendSetCmd( 'sudo ./board.out usbkey 0x44' );" value="全画面表示" />
+  <input type="submit" class="button" onclick="sendSetCmd( 'sudo ./board.out --usbkey 0x44' );" value="全画面表示" />
 </section>
 
 </body>
