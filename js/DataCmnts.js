@@ -7,8 +7,8 @@
 'use strict';
 
 // 必要なライブラリをロード
-var fs = require( 'fs' );
-var MongoClient  = require( 'mongodb' ).MongoClient;
+let fs = require('fs');
+let MongoClient  = require('mongodb').MongoClient;
 
 
 /**
@@ -16,9 +16,9 @@ var MongoClient  = require( 'mongodb' ).MongoClient;
  * @param {void}
  * @constructor
  * @example
- * var obj = new DataCmnt();
+ * let obj = new DataCmnt();
 */
-var DataCmnts = function(){
+let DataCmnts = function() {
   /**
    * MongoDB のデータベース名
    * @type {string}
@@ -38,30 +38,30 @@ var DataCmnts = function(){
  * @param {Object.<string, string>} data - JSON 文字列
  * @return {void}
  * @example
- * CreateMDDoc( "{...}" );
+ * CreateMDDoc("{...}");
 */
-DataCmnts.prototype.CreateMDDoc = function( data ){
-  console.log( "[DataCmnts.js] CreateMDDoc()" );
-  console.log( "[DataCmnts.js] data = " + data );
+DataCmnts.prototype.CreateMDDoc = function(data) {
+  console.log("[DataCmnts.js] CreateMDDoc()");
+  console.log("[DataCmnts.js] data = " + data);
 
-//  var jsonObj = (new Function( 'return ' + data ))();
+//  let jsonObj = (new Function('return ' + data))();
 
-  var doc = { date: data.date, time: data.time, area: data.area, gid: data.gid, cmnt: data.cmnt };
+  let doc = {date: data.date, time: data.time, area: data.area, gid: data.gid, cmnt: data.cmnt};
 
-  MongoClient.connect( this.mongo_url, function(err, db) {
-    if( err ){
+  MongoClient.connect(this.mongo_url, function(err, db) {
+    if(err) {
       throw err;
     }
 
     // データベースを取得する
-    var dbo = db.db( 'comments' );
+    let dbo = db.db('comments');
 
     // コレクションを取得する
-    var clo = dbo.collection( 'feedback' );
+    let clo = dbo.collection('feedback');
 
     // doc をデータベースに insert する
-    clo.insertOne( doc, function(err, res) {
-      if( err ){
+    clo.insertOne(doc, function(err, res) {
+      if(err) {
         throw err;
       }
       db.close();
@@ -76,38 +76,38 @@ DataCmnts.prototype.CreateMDDoc = function( data ){
  * @param {function(boolean, Object.<string, number>)} callback - データを取得するためのコールバック関数
  * @return {void}
  * @example
- * GetMDDocDataOneDay( '2018-07-25', ... );
+ * GetMDDocDataOneDay('2018-07-25', ...);
 */
-DataCmnts.prototype.GetMDDocDataOneDay = function( date, callback ){
-  console.log( "[DataCmnts.js] GetMDDocDataOneDay()" );
-  console.log( "[DataCmnts.js] date   = " + date );
+DataCmnts.prototype.GetMDDocDataOneDay = function(date, callback) {
+  console.log("[DataCmnts.js] GetMDDocDataOneDay()");
+  console.log("[DataCmnts.js] date   = " + date);
 
-  MongoClient.connect( this.mongo_url, function(err, db) {
-    if( err ) throw err;
+  MongoClient.connect(this.mongo_url, function(err, db) {
+    if(err) throw err;
 
     // データベースを取得する
-    var dbo = db.db( 'comments' );
+    let dbo = db.db('comments');
 
     // コレクションを取得する
-    var clo = dbo.collection( 'feedback' );
+    let clo = dbo.collection('feedback');
 
-    var query = { date: date };
+    let query = {date: date};
 
     // {date: date} のドキュメントを取得する
-    clo.find( query ).toArray( function(err, documents){
+    clo.find(query).toArray(function(err, documents) {
       try{
-        if( err ){
+        if(err) {
           throw err;
         }
 
         db.close();
 
-//      console.log( documents );
-        callback( true, documents );
+//      console.log(documents);
+        callback(true, documents);
       }
-      catch( e ){
-        console.log( "[DataCmnts.js] e = " + e );
-        callback( false, documents );
+      catch(e) {
+        console.log("[DataCmnts.js] e = " + e);
+        callback(false, documents);
       }
     });
   });
