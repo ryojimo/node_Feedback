@@ -9,11 +9,13 @@ let http     = require('http');
 let socketio = require('socket.io');
 let fs       = require('fs');
 let colors   = require('colors');
+let schedule = require('node-schedule');
 require('date-utils');
 
-const DataCmnts   = require('./js/DataCmnts');
-const Docomo      = require('./js/Docomo');
-
+const ApiCmn        = require('./js/ApiCmn');
+const ApiDocomo     = require('./js/ApiDocomo');
+const ApiFileSystem = require('./js/ApiFileSystem');
+const DataFeedback  = require('./js/DataFeedback');
 
 // Ver. 表示
 let now = new Date();
@@ -73,8 +75,8 @@ function doRequest(
   case '/AreaMap.png':
     fs.readFile('./app/AreaMap.png', 'binary', function(err, data) {
       res.writeHead(200, {'Content-Type': 'image/png',
-                           'Access-Control-Allow-Origin': '*'
-                    });
+                          'Access-Control-Allow-Origin': '*'
+                   });
       res.write(data, 'binary');
       res.end();
     });
@@ -89,12 +91,10 @@ let io = socketio.listen(server);
 //-----------------------------------------------------------------------------
 // 起動の処理関数
 //-----------------------------------------------------------------------------
-let timerDist;
-let timerFlg;
-
-let cmnts   = new DataCmnts();
-let docomo  = new Docomo();
-
+let g_apiCmn        = new ApiCmn();
+let g_apiDocomo     = new ApiDocomo();
+let g_apiFileSystem = new ApiFileSystem();
+let g_arrayObj      = new Array();
 
 startSystem();
 
@@ -109,10 +109,29 @@ startSystem();
 function startSystem() {
   console.log("[main.js] startSystem()");
 
-//  timerDist = setInterval(checkDist, 2000);
-  timerFlg  = setInterval(function() {
-                io.sockets.emit('S_to_C_TALK_ENABLED', {value:false});
-              }, 90000);
+  let timerFlg  = setInterval(function() {io.sockets.emit('S_to_C_TALK_ENABLED', {value:false});}, 90000);
+
+  let job01 = runClearArrayObj(' 5  23     * * *' );
+};
+
+
+/**
+ * node-schedule の Job を登録する。
+ * @param {string} when - Job を実行する時間
+ * @return {object} job - node-schedule に登録した job
+ * @example
+ * runStoreFeedback( ' 0 0-23/1 * * *' );
+*/
+function runClearArrayObj(when) {
+  console.log("[main.js] runClearArrayObj()");
+  console.log("[main.js] when = " + when);
+
+  let job = schedule.scheduleJob(when, function() {
+    console.log("[main.js] node-schedule で g_arrayObj がクリアされました");
+    g_arrayObj.splice(0, g_arrayObj.length);
+  });
+
+  return job;
 };
 
 
@@ -139,16 +158,6 @@ io.sockets.on('connection', function(socket) {
   });
 
 
-  socket.on('C_to_S_GET_CMNT_ONE_DAY', function(date) {
-    console.log("[main.js] " + 'C_to_S_GET_CMNT_ONE_DAY');
-
-    cmnts.GetMDDocDataOneDay(date, function(err, data) {
-//      console.log(data);
-      io.sockets.emit('S_to_C_CMNT_ONE_DAY', {ret:err, value:data});
-    });
-  });
-
-
   socket.on('C_to_S_SET', function(data) {
     console.log("[main.js] " + 'C_to_S_SET');
     console.log("[main.js] data = " + data);
@@ -164,24 +173,52 @@ io.sockets.on('connection', function(socket) {
   });
 
 
-  socket.on('C_to_S_CMNT', function(data) {
+  socket.on('C_to_S_GET_CMNT_ONE_DAY', function(date) {
+    console.log("[main.js] " + 'C_to_S_GET_CMNT_ONE_DAY');
+    console.log("[main.js] date = " + date);
+
+    let ret = false;
+    let jsonObj = null;
+    let filename = '/media/pi/USBDATA/feedback/' + date + '.txt';
+    console.log("[main.js] filename = " + filename);
+
+    try {
+      fs.statSync(filename);
+
+      ret = fs.readFileSync(filename, 'utf8');
+      jsonObj = (new Function("return " + ret))();
+
+      ret = true;
+    } catch(err) {
+      if(err.code === 'ENOENT') {
+        console.log("[main.js] file does not exist.");
+      } else {
+        console.log("[main.js] err = " + err);
+      }
+      ret = false;
+    }
+
+    io.sockets.emit('S_to_C_CMNT_ONE_DAY', {ret: ret, value: jsonObj});
+  });
+
+
+  socket.on('C_to_S_CMNT', function(jsonObj) {
     console.log("[main.js] " + 'C_to_S_CMNT');
-    console.log("[main.js] data = " + data);
+    console.log("[main.js] data = " + JSON.stringify(jsonObj));
 
-    let data = {date:yyyymmdd(), time: hhmmss(), area: data.area, gid: data.gid, cmnt: data.cmnt};
+    let obj = new DataFeedback(jsonObj);
+    console.log("[main.js] obj = " + JSON.stringify(obj));
 
-    console.log("[main.js] data.date = " + data.date);
-    console.log("[main.js] data.time = " + data.time);
-    console.log("[main.js] data.area = " + data.area);
-    console.log("[main.js] data.gid  = " + data.gid);
-    console.log("[main.js] data.cmnt = " + data.cmnt);
+    obj.writeFeedback(jsonObj.gid, jsonObj.email, jsonObj.area, jsonObj.cmnt);
+    let info = obj.get();
+    console.log("[main.js] info = " + JSON.stringify(info));
+    g_arrayObj.push(info);
 
-    cmnts.CreateMDDoc(data);
+    let date = g_apiCmn.yyyymmdd();
+    let filename = '/media/pi/USBDATA/feedback/' + date + '.txt';
+    g_apiFileSystem.write(filename, g_arrayObj);
 
-    cmnts.GetMDDocDataOneDay(yyyymmdd(), function(err, data) {
-//      console.log(data);
-      io.sockets.emit('S_to_C_CMNT_TODAY', {value:data});
-    });
+    io.sockets.emit('S_to_C_CMNT_TODAY', {value: g_arrayObj});
   });
 
 
@@ -189,109 +226,13 @@ io.sockets.on('connection', function(socket) {
     console.log("[main.js] " + 'C_to_S_TALK');
     console.log("[main.js] cmnt = " + cmnt);
 
-    docomo.Update('nozomi', 'hello');
-    docomo.Talk(cmnt, function() {
+    g_apiDocomo.update('nozomi', 'hello');
+    g_apiDocomo.talk(cmnt, function() {
       io.sockets.emit('S_to_C_TALK_CB', {value:true})
     });
   });
 
 
 });
-
-
-/**
- * 距離センサをチェックして 30cm 以内に何かがいれば、S_to_C_START を呼ぶ
- * @param {void}
- * @return {void}
- * @example
- * yyyymmddhhmiss();
-*/
-function checkDist() {
-  console.log("[main.js] checkDist()");
-
-  let exec = require('child_process').exec;
-  let ret  = exec("sudo ./board.out dist",
-    function(err, stdout, stderr) {
-      console.log("[main.js] " + "stdout = " + stdout);
-      console.log("[main.js] " + "stderr = " + stderr);
-
-      if(err) {
-        console.log("[main.js] " + err);
-      } else if(stdout < 20) {
-        // 一旦、繰り返し処理を呼ぶのをやめる
-        // 10sec 後に Mic 入力開始
-        // 20sec 後に startSystem() を再び呼び出し始める
-        clearInterval(timerDist);
-        clearInterval(timerFlg);
-
-        io.sockets.emit('S_to_C_START_TALK', {value:false});
-
-        setTimeout(function() {
-                io.sockets.emit('S_to_C_START_MIC', {value:false});
-              }, 10000);
-        setTimeout(startSystem, 30000);
-      }
-    });
-};
-
-
-/**
- * 数字が 1 桁の場合に 0 埋めで 2 桁にする
- * @param {number} num - 数値
- * @return {number} num - 0 埋めされた 2 桁の数値
- * @example
- * toDoubleDigits(8);
-*/
-let toDoubleDigits = function(num) {
-//  console.log("[main.js] toDoubleDigits()");
-//  console.log("[main.js] num = " + num);
-  num += '';
-  if(num.length === 1) {
-    num = '0' + num;
-  }
-  return num;
-};
-
-
-/**
- * 現在の日付を YYYY-MM-DD 形式で取得する
- * @param {void}
- * @return {string} day - 日付
- * @example
- * yyyymmdd();
-*/
-let yyyymmdd = function() {
-  console.log("[main.js] yyyymmdd()");
-  let date = new Date();
-
-  let yyyy = date.getFullYear();
-  let mm   = toDoubleDigits(date.getMonth() + 1);
-  let dd   = toDoubleDigits(date.getDate());
-
-  let day = yyyy + '-' + mm + '-' + dd;
-  console.log("[main.js] day = " + day);
-  return day;
-};
-
-
-/**
- * 現在の時刻を HH:MM:SS 形式で取得する
- * @param {void}
- * @return {string} time - 時刻
- * @example
- * hhmmss();
-*/
-let hhmmss = function() {
-  console.log("[main.js] hhmmss()");
-  let date = new Date();
-
-  let hour = toDoubleDigits(date.getHours());
-  let min  = toDoubleDigits(date.getMinutes());
-  let sec  = toDoubleDigits(date.getSeconds());
-
-  let time = hour + ':' + min + ':' + sec;
-  console.log("[main.js] time = " + time);
-  return time;
-};
 
 

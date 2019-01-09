@@ -3,9 +3,9 @@
  * @author       Ryoji Morita
  * @version      0.0.1
 */
-let sv_ip   = "feedback.rp.lfx.sony.co.jp"; // node.js server の IP アドレス
+//let sv_ip   = "feedback.rp.lfx.sony.co.jp"; // node.js server の IP アドレス
 //let sv_ip = "43.2.100.158";               // node.js server の IP アドレス
-//let sv_ip = "192.168.91.11";              // node.js server の IP アドレス
+let sv_ip = "192.168.91.140";              // node.js server の IP アドレス
 let sv_port = 5000;                         // node.js server の port 番号
 
 let server = io.connect("http://" + sv_ip + ":" + sv_port); //ローカル
@@ -72,9 +72,10 @@ server.on('S_to_C_CMNT_TODAY', function(data) {
 
 server.on('S_to_C_CMNT_ONE_DAY', function(data) {
   console.log("[app.js] " + 'S_to_C_CMNT_ONE_DAY');
-  console.log("[app.js] data = " + JSON.stringify(data.value));
+  console.log("[app.js] data.ret   = " + data.ret);
+  console.log("[app.js] data.value = " + JSON.stringify(data.value));
 
-  if( data.value == false) {
+  if( data.ret == false) {
     str = "コメントがありません。";
     document.getElementById("val_data_daily").innerHTML = str;
   } else {
@@ -201,17 +202,19 @@ function sendCmnt() {
     }
   }
 
-  let gid  = document.getElementById("val_gid");
-  let cmnt = document.getElementById("val_cmnt");
+  let gid   = document.getElementById("val_gid");
+  let email = document.getElementById("val_email");
+  let cmnt  = document.getElementById("val_cmnt");
 
   if(gid.value == "") {
     gid.value = 0;
   }
 
-  let data = {area:"", gid:"", cmnt:""};
-  data.area = area;
-  data.gid  = gid.value;
-  data.cmnt = cmnt.value;
+  let data = {area:"", gid:"", email:"", cmnt:""};
+  data.area  = area;
+  data.gid   = gid.value;
+  data.email = email.value;
+  data.cmnt  = cmnt.value;
 
   // サーバーへデータを送信
   if(cmnt.value == "") {
@@ -244,6 +247,9 @@ function clearCmnt() {
 
   let gid  = document.getElementById("val_gid");
   gid.value = "";
+
+  let email = document.getElementById("val_email");
+  email.value = "";
 }
 
 
