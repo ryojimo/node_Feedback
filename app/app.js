@@ -3,12 +3,12 @@
  * @author       Ryoji Morita
  * @version      0.0.1
 */
-//let sv_ip   = "feedback.rp.lfx.sony.co.jp"; // node.js server の IP アドレス
-//let sv_ip = "43.2.100.158";               // node.js server の IP アドレス
-let sv_ip = "192.168.91.140";              // node.js server の IP アドレス
+//let sv_ip   = 'feedback.rp.lfx.sony.co.jp'; // node.js server の IP アドレス
+//let sv_ip = '43.2.100.158';               // node.js server の IP アドレス
+let sv_ip = '192.168.91.140';              // node.js server の IP アドレス
 let sv_port = 5000;                         // node.js server の port 番号
 
-let server = io.connect("http://" + sv_ip + ":" + sv_port); //ローカル
+let server = io.connect('http://' + sv_ip + ':' + sv_port); //ローカル
 
 
 //-----------------------------------------------------------------------------
@@ -66,7 +66,7 @@ server.on('S_to_C_START_MIC', function(data) {
 server.on('S_to_C_CMNT_TODAY', function(data) {
   console.log("[app.js] " + 'S_to_C_CMNT_TODAY');
   console.log("[app.js] data = " + JSON.stringify(data.value));
-  showUpdatedCmnt(data.value, "val_data_today", "down");
+  showUpdatedCmnt(data.value, 'val_data_today', 'down');
 });
 
 
@@ -76,10 +76,10 @@ server.on('S_to_C_CMNT_ONE_DAY', function(data) {
   console.log("[app.js] data.value = " + JSON.stringify(data.value));
 
   if( data.ret == false) {
-    str = "コメントがありません。";
-    document.getElementById("val_data_daily").innerHTML = str;
+    str = 'コメントがありません。';
+    document.getElementById('val_data_daily').innerHTML = str;
   } else {
-    showUpdatedCmnt(data.value, "val_data_daily", "up");
+    showUpdatedCmnt(data.value, 'val_data_daily', 'up');
   }
 });
 
@@ -110,18 +110,18 @@ function showUpdatedCmnt(data, id, dir) {
   console.log("[app.js] data.length = " + data.length);
 
   // 表示する文字列を生成
-  let str = "";
+  let str = '';
 
-  if(dir === "up") {
+  if(dir === 'up') {
     for(i=0; i<data.length; i++) {
-      str += data[i].time + " : " + data[i].cmnt + "\n";
+      str += data[i].time + ' : ' + data[i].cmnt + '\n';
     }
-  } else if(dir === "down") {
+  } else if(dir === 'down') {
     for(i=data.length - 1; i>=0; i--) {
-      str += data[i].time + " : " + data[i].cmnt + "\n";
+      str += data[i].time + ' : ' + data[i].cmnt + '\n';
     }
   } else {
-    str = "";
+    str = '';
   }
 
   // 文字列を表示
@@ -154,11 +154,11 @@ document.onmousemove = function() {
 function sendGetCmntOneDay() {
   console.log("[app.js] sendGetCmntOneDay()");
 
-  let date = document.getElementById("val_date" ).value;
+  let date = document.getElementById('val_date').value;
   console.log("[app.js] date =" + date);
 
-  if(date < "2018-08-01") {
-    alert("2018/08/01 以降を指定してください。");
+  if(date < '2018-08-01') {
+    alert('2018/08/01 以降を指定してください。');
   }
 
   console.log("[app.js] server.emit(" + 'C_to_S_GET_CMNT_ONE_DAY' + ")");
@@ -193,32 +193,32 @@ function sendCmnt() {
   console.log("[app.js] sendCmnt()");
 
   // データをチェック
-  let area = "";
+  let area = '';
   for(i = 1; i <= 7; i++) {
-    let where = document.getElementById("val_area" + i ).checked;
+    let where = document.getElementById('val_area' + i ).checked;
     console.log("[app.js] (i, area)", i, where );
     if(where === true) {
-      area = area + i + "" + ",";
+      area = area + i + '' + ',';
     }
   }
 
-  let gid   = document.getElementById("val_gid");
-  let email = document.getElementById("val_email");
-  let cmnt  = document.getElementById("val_cmnt");
+  let gid   = document.getElementById('val_gid');
+  let email = document.getElementById('val_email');
+  let cmnt  = document.getElementById('val_cmnt');
 
-  if(gid.value == "") {
+  if(gid.value == '') {
     gid.value = 0;
   }
 
-  let data = {area:"", gid:"", email:"", cmnt:""};
+  let data = {area:'', gid:'', email:'', cmnt:''};
   data.area  = area;
   data.gid   = gid.value;
   data.email = email.value;
   data.cmnt  = cmnt.value;
 
   // サーバーへデータを送信
-  if(cmnt.value == "") {
-    alert("ご要望・ご意見を記入してください。");
+  if(cmnt.value == '') {
+    alert('ご要望・ご意見を記入してください。');
   } else {
     console.log("[app.js] server.emit(" + 'C_to_S_CMNT' + ")");
     server.emit('C_to_S_CMNT', data );
@@ -238,17 +238,17 @@ function sendCmnt() {
 */
 function clearCmnt() {
   console.log("[app.js] clearCmnt()");
-  let cmnt = document.getElementById("val_cmnt");
-  cmnt.value = "";
+  let cmnt = document.getElementById('val_cmnt');
+  cmnt.value = '';
 
   for(i = 1; i <= 7; i++) {
-    document.getElementById("val_area" + i ).checked = false;
+    document.getElementById('val_area' + i ).checked = false;
   }
 
-  let gid  = document.getElementById("val_gid");
+  let gid  = document.getElementById('val_gid');
   gid.value = "";
 
-  let email = document.getElementById("val_email");
+  let email = document.getElementById('val_email');
   email.value = "";
 }
 
@@ -263,8 +263,8 @@ function clearCmnt() {
 function sendTalkData() {
   console.log("[app.js] sendTalkData()");
 
-  let hi1 = "ご意見の記入をお願いします。"
-  let hi2 = "どうぞ。";
+  let hi1 = 'ご意見の記入をお願いします。';
+  let hi2 = 'どうぞ。';
 
   console.log("[app.js] server.emit(" + 'C_to_S_TALK' + ")");
   server.emit('C_to_S_TALK', hi1 + hi2 );
@@ -287,7 +287,7 @@ recognition.lang = 'ja';
 recognition.addEventListener('result', function(event) {
     let text = event.results.item(0).item(0).transcript;
     console.log("[app.js] text = " + text );
-    $("#val_cmnt").val(text);
+    $('#val_cmnt').val(text);
 }, false );
 
 
