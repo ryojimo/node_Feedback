@@ -21,7 +21,6 @@ const DataFeedback  = require('./js/DataFeedback');
 let now = new Date();
 console.log("[main.js] " + now.toFormat("YYYY年MM月DD日 HH24時MI分SS秒").rainbow);
 console.log("[main.js] " + "ver.01 : app.js".rainbow);
-console.log("[main.js] " + "access to http://localhost:5000");
 
 // サーバー・オブジェクトを生成
 let server = http.createServer();
@@ -30,7 +29,9 @@ let server = http.createServer();
 server.on('request', doRequest);
 
 // 待ち受けスタート
-server.listen(process.env.VMC_APP_PORT || 5000);
+const PORT = 4001;
+server.listen(process.env.VMC_APP_PORT || PORT);
+console.log("[main.js] access to http://localhost:" + PORT);
 console.log("[main.js] Server running!");
 
 // request イベント処理
@@ -96,6 +97,7 @@ let g_apiDocomo     = new ApiDocomo();
 let g_apiFileSystem = new ApiFileSystem();
 let g_arrayObj      = new Array();
 
+
 startSystem();
 
 
@@ -111,7 +113,7 @@ function startSystem() {
 
   let timerFlg  = setInterval(function() {io.sockets.emit('S_to_C_TALK_ENABLED', {value:false});}, 90000);
 
-  let job01 = runClearArrayObj(' 5  23     * * *' );
+  let job01 = runClearArrayObj(' 5  23     * * *');
 };
 
 
@@ -120,7 +122,7 @@ function startSystem() {
  * @param {string} when - Job を実行する時間
  * @return {object} job - node-schedule に登録した job
  * @example
- * runStoreFeedback( ' 0 0-23/1 * * *' );
+ * runStoreFeedback( ' 0 0-23/1 * * *');
 */
 function runClearArrayObj(when) {
   console.log("[main.js] runClearArrayObj()");
@@ -210,9 +212,7 @@ io.sockets.on('connection', function(socket) {
     console.log("[main.js] obj = " + JSON.stringify(obj));
 
     obj.writeFeedback(jsonObj.gid, jsonObj.email, jsonObj.area, jsonObj.cmnt);
-    let info = obj.get();
-    console.log("[main.js] info = " + JSON.stringify(info));
-    g_arrayObj.push(info);
+    g_arrayObj.push(obj.get());
 
     let date = g_apiCmn.yyyymmdd();
     let filename = '/media/pi/USBDATA/feedback/' + date + '.txt';

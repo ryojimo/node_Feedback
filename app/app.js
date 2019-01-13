@@ -3,12 +3,12 @@
  * @author       Ryoji Morita
  * @version      0.0.1
 */
-//let sv_ip   = 'feedback.rp.lfx.sony.co.jp'; // node.js server の IP アドレス
-//let sv_ip = '43.2.100.158';               // node.js server の IP アドレス
-let sv_ip = '192.168.91.140';              // node.js server の IP アドレス
-let sv_port = 5000;                         // node.js server の port 番号
+//const SV_IP     = 'feedback.rp.lfx.sony.co.jp'; // node.js server の IP アドレス
+//const SV_IP     = '43.2.100.158';               // node.js server の IP アドレス
+const SV_IP   = '192.168.91.11';                // node.js server の IP アドレス
+const SV_PORT = 4001;                           // node.js server の port 番号
 
-let server = io.connect('http://' + sv_ip + ':' + sv_port); //ローカル
+let server = io.connect('http://' + SV_IP + ':' + SV_PORT); //ローカル
 
 
 //-----------------------------------------------------------------------------
@@ -37,16 +37,16 @@ server.on('disconnect', function(client) {    // 切断時
 
 server.on('S_to_C_DATA', function(data) {
   console.log("[app.js] " + 'S_to_C_DATA');
-  console.log("[app.js] data = " + data.value );
+  console.log("[app.js] data = " + data.value);
 //  window.alert("コマンドを送信しました。\n\r" + data.value);
 });
 
 
 server.on('S_to_C_TALK_ENABLED', function(data) {
   console.log("[app.js] " + 'S_to_C_TALK_ENABLED');
-  console.log("[app.js] data = " + data.value );
+  console.log("[app.js] data = " + data.value);
   flg_talk = true;
-//  window.alert( "コマンドを送信しました。\n\r" + data.value );
+//  window.alert( "コマンドを送信しました。\n\r" + data.value);
 });
 
 
@@ -195,8 +195,8 @@ function sendCmnt() {
   // データをチェック
   let area = '';
   for(i = 1; i <= 7; i++) {
-    let where = document.getElementById('val_area' + i ).checked;
-    console.log("[app.js] (i, area)", i, where );
+    let where = document.getElementById('val_area' + i).checked;
+    console.log("[app.js] (i, area)", i, where);
     if(where === true) {
       area = area + i + '' + ',';
     }
@@ -221,7 +221,7 @@ function sendCmnt() {
     alert('ご要望・ご意見を記入してください。');
   } else {
     console.log("[app.js] server.emit(" + 'C_to_S_CMNT' + ")");
-    server.emit('C_to_S_CMNT', data );
+    server.emit('C_to_S_CMNT', data);
   }
 
   // データをクリア
@@ -242,7 +242,7 @@ function clearCmnt() {
   cmnt.value = '';
 
   for(i = 1; i <= 7; i++) {
-    document.getElementById('val_area' + i ).checked = false;
+    document.getElementById('val_area' + i).checked = false;
   }
 
   let gid  = document.getElementById('val_gid');
@@ -267,7 +267,7 @@ function sendTalkData() {
   let hi2 = 'どうぞ。';
 
   console.log("[app.js] server.emit(" + 'C_to_S_TALK' + ")");
-  server.emit('C_to_S_TALK', hi1 + hi2 );
+  server.emit('C_to_S_TALK', hi1 + hi2);
 }
 
 
@@ -286,9 +286,9 @@ recognition.lang = 'ja';
 // 録音終了時トリガー
 recognition.addEventListener('result', function(event) {
     let text = event.results.item(0).item(0).transcript;
-    console.log("[app.js] text = " + text );
+    console.log("[app.js] text = " + text);
     $('#val_cmnt').val(text);
-}, false );
+}, false);
 
 
 function submitMicStart() {

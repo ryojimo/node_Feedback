@@ -25,7 +25,7 @@ class ApiCmn {
    * @example
    * yyyymmdd();
   */
-  yyyymmdd( offset = 0 ){
+  yyyymmdd(offset = 0){
     console.log("[ApiCmn.js] yyyymmdd()");
     console.log("[ApiCmn.js] offset = " + offset);
 
@@ -54,9 +54,9 @@ class ApiCmn {
     console.log("[main.js] hhmmss()");
     let date = new Date();
 
-    let hour = ('0' + date.getHours()   ).slice(-2);  // 現在の時間を 2 桁表記で取得
-    let min  = ('0' + date.getMinutes() ).slice(-2);  // 現在の  分を 2 桁表記で取得
-    let sec  = ('0' + date.getSeconds() ).slice(-2);  // 現在の  秒を 2 桁表記で取得
+    let hour = ('0' + date.getHours()  ).slice(-2);  // 現在の時間を 2 桁表記で取得
+    let min  = ('0' + date.getMinutes()).slice(-2);  // 現在の  分を 2 桁表記で取得
+    let sec  = ('0' + date.getSeconds()).slice(-2);  // 現在の  秒を 2 桁表記で取得
 
     let ret = hour + ':' + min + ':' + sec;
     console.log("[main.js] ret = " + ret);

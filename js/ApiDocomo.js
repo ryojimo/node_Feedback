@@ -38,7 +38,7 @@ class ApiDocomo {
   /**
    * this.voice と this.voice_filename を更新する
    * @param {string} speaker - アップデートする voice
-   * @param {string} filename - ****.lpcm, ****.wav 中間ファイルのファイル名 (= **** の部分 )
+   * @param {string} filename - ****.lpcm, ****.wav 中間ファイルのファイル名 (= **** の部分)
    * @return {void}
    * @example
    * update("nozomi", "hello");
@@ -81,9 +81,9 @@ class ApiDocomo {
    * makeDocomoXML("nozomi", "こんにちは");
   */
   makeDocomoXML(speaker, cmnt) {
-    console.log( "[Docomo.js] makeDocomoXML()" );
-    console.log( "[Docomo.js] speaker = " + speaker );
-    console.log( "[Docomo.js] cmnt = " + cmnt );
+    console.log( "[Docomo.js] makeDocomoXML()");
+    console.log( "[Docomo.js] speaker = " + speaker);
+    console.log( "[Docomo.js] cmnt = " + cmnt);
 
     let xml = '<?xml version="1.0" encoding="utf-8" ?>';
     let speak = '<speak version="1.1">';
@@ -149,7 +149,7 @@ class ApiDocomo {
   talk(cmnt, callback) {
     console.log("[Docomo.js] talk()");
     console.log("[Docomo.js] cmnt     = " + cmnt);
-  //  console.log( "[Docomo.js] callback = " + callback );
+  //  console.log("[Docomo.js] callback = " + callback);
 
     let apiBODY = this.makeDocomoXML(this.voice, cmnt);
 

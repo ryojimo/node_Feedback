@@ -29,7 +29,7 @@ class DataFeedback {
       date: "",           // @type {string} : コメントが記載された日にち
       time: "",           // @type {string} : コメントが記載された時間
       area: "",           // @type {string} : コメント対象のエリア
-      comment: "",        // @type {string} : コメント内容
+      cmnt: "",           // @type {string} : コメント内容
     };
 
     this.data = jsonObj;
@@ -82,7 +82,7 @@ class DataFeedback {
     this.data.date = g_apiCmn.yyyymmdd();
     this.data.time = g_apiCmn.hhmmss();
     this.data.area = area;
-    this.data.comment = cmnt;
+    this.data.cmnt = cmnt;
   }
 
 
@@ -101,7 +101,7 @@ class DataFeedback {
     this.data.date = "";
     this.data.time = "";
     this.data.area = "";
-    this.data.comment = "";
+    this.data.cmnt = "";
   }
 
 
